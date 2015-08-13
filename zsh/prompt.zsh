@@ -13,16 +13,27 @@ git_branch() {
   echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
 }
 
+git_not_added() {
+  expr $(git status --porcelain 2>/dev/null| grep "^ M" | wc -l)
+}
+
+git_not_committed() {
+  expr $(git status --porcelain 2>/dev/null| grep "^M" | wc -l)
+}
+
 git_dirty() {
   if $(! $git status -s &> /dev/null)
   then
     echo ""
   else
-    if [[ $($git status --porcelain) == "" ]]
-    then
-      echo "on %{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}"
+    # Get number of files that are uncommitted and not added
+    if [[ $(git_not_added) > 0 ]]; then
+      echo " %{$fg[magenta]%}$(git_prompt_info)%{$reset_color%} %{$fg_bold[red]%}◎%{$reset_color%}"
+    elif [[ $(git_not_committed) > 0 ]]; then
+      echo " %{$fg[magenta]%}$(git_prompt_info)%{$reset_color%} %{$fg_bold[yellow]%}◉%{$reset_color%}"
+      #statements
     else
-      echo "on %{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}"
+      echo " %{$fg[magenta]%}$(git_prompt_info)%{$reset_color%} %{$fg_bold[green]%}✪%{$reset_color%}"
     fi
   fi
 }
@@ -34,7 +45,7 @@ git_prompt_info () {
 }
 
 unpushed () {
-  $git cherry -v @{upstream} 2>/dev/null
+  $git cherry -v @{origin} 2>/dev/null
 }
 
 need_push () {
@@ -42,7 +53,7 @@ need_push () {
   then
     echo " "
   else
-    echo " with %{$fg_bold[magenta]%}unpushed%{$reset_color%} "
+    echo " %{$fg_bold[magenta]%}☠%{$reset_color%} "
   fi
 }
 
@@ -68,10 +79,10 @@ rb_prompt() {
 }
 
 directory_name() {
-  echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
+  echo "%{$fg[cyan]%}%1/%\%{$reset_color%}"
 }
 
-export PROMPT=$'\n$(rb_prompt)in $(directory_name) $(git_dirty)$(need_push)\n› '
+export PROMPT=$'$(directory_name)$(git_dirty)$(need_push)%{$fg[cyan]%}❖%{$reset_color%} '
 set_prompt () {
   export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
 }

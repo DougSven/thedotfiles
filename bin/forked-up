@@ -1,0 +1,19 @@
+# function to clone a repo from a fork and setup a readonly upstream
+repo=$1
+upstream=$2
+fork=$3
+
+if [[ -z "$fork" ]]; then
+  fork="$GITHUB_USERNAME"
+fi
+
+fork_url="git@github.com:$fork/$repo.git"
+upstream_url="git@github.com:$upstream/$repo.git"
+
+echo "Fork:     $fork_url"
+echo "Upstream: $upstream_url"
+
+git clone "$fork_url"
+cd "$repo"
+git remote add upstream "$upstream_url"
+git config remote.upstream.receivepack /bin/false

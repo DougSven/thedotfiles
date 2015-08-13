@@ -1,0 +1,1 @@
+export GRAILS_HOME="~/.gvm/grails"
