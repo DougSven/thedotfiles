@@ -1,1 +1,1 @@
-export GRAILS_HOME="~/.gvm/grails"
+export GRAILS_HOME="~/.skdman/grails"

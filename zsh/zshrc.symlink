@@ -39,5 +39,8 @@ done
 
 unset config_files
 
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-[[ -s "/Users/doug/.gvm/bin/gvm-init.sh" ]] && source "/Users/doug/.gvm/bin/gvm-init.sh"
+
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/doug/.sdkman"
+[[ -s "/Users/doug/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/doug/.sdkman/bin/sdkman-init.sh"

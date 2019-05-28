@@ -45,7 +45,7 @@ git_prompt_info () {
 }
 
 unpushed () {
-  $git cherry -v @{origin} 2>/dev/null
+  $git cherry -v origin/$(git_prompt_info) 2>/dev/null
 }
 
 need_push () {
@@ -54,27 +54,6 @@ need_push () {
     echo " "
   else
     echo " %{$fg_bold[magenta]%}☠%{$reset_color%} "
-  fi
-}
-
-ruby_version() {
-  if (( $+commands[rbenv] ))
-  then
-    echo "$(rbenv version | awk '{print $1}')"
-  fi
-
-  if (( $+commands[rvm-prompt] ))
-  then
-    echo "$(rvm-prompt | awk '{print $1}')"
-  fi
-}
-
-rb_prompt() {
-  if ! [[ -z "$(ruby_version)" ]]
-  then
-    echo "%{$fg_bold[yellow]%}$(ruby_version)%{$reset_color%} "
-  else
-    echo ""
   fi
 }
 
